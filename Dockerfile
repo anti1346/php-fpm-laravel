@@ -10,7 +10,6 @@ RUN apt update \
     zlib1g-dev \
     libzip-dev \
     libz-dev \
-    libzip-dev \
     libpq-dev \
     libjpeg-dev \
     libpng-dev \
@@ -29,8 +28,7 @@ RUN apt update \
     && apt clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN docker-php-ext-install gd \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && docker-php-ext-install pcntl \
     && docker-php-ext-install zip \
@@ -47,7 +45,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     # && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
     # && source ~/.bashrc \
     && composer install
-RUN cd /var/www/html
+RUN cd /var/www/html \
+    && composer global require laravel/installer
 
 RUN groupadd -g 5000 www \
     && useradd -u 1000 -ms /bin/bash -g www www
