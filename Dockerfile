@@ -43,8 +43,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 ### Composer Install
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     # && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
-    # && source ~/.bashrc \
-    && composer install
+    && source ~/.bashrc
+    # && composer install
 RUN cd /var/www/html \
     && composer global require laravel/installer
 
