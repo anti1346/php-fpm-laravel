@@ -5,8 +5,8 @@ ENV NODE_VERSION v16.15.1
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-RUN apt-get update \
-    && apt-get install -qq -y --no-install-recommends \
+RUN apt update \
+    && apt install -qq -y --no-install-recommends \
     zlib1g-dev \
     libzip-dev \
     libz-dev \
@@ -21,7 +21,7 @@ RUN apt-get update \
     libgmp-dev \
     libmagickwand-dev \
     unzip \
-    && apt-get install -qq -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
     telnet \
     vim \
     git \
@@ -44,15 +44,15 @@ RUN docker-php-ext-install gd \
 
 ### Composer Install
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
-    && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
-    && source ~/.bashrc \
+    # && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
+    # && source ~/.bashrc \
     && composer install
-RUN cd /var/www/html \
-    && 
+RUN cd /var/www/html
 
 RUN groupadd -g 5000 www \
     && useradd -u 1000 -ms /bin/bash -g www www
-### Install nvm with node and npm
+
+### Install NVM with NODE and NPM
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
     && source ~/.bashrc \
     && nvm install node
