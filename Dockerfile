@@ -67,3 +67,6 @@ CMD ["php-fpm"]
 
 ### docker build
 # docker build --no-cache -t anti1346/php-fpm-laravel:8.1 .
+#
+### docker buildx(m1)
+# docker buildx build --platform linux/amd64 --load --no-cache -t anti1346/php-fpm-laravel:8.1-amd64 .
