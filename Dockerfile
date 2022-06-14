@@ -1,4 +1,4 @@
-FROM php:8.1.7-fpm
+FROM php:8.1-fpm
 
 ENV COMPOSER_MEMORY_LIMIT='-1'
 ENV NODE_VERSION v16.15.1
@@ -25,6 +25,9 @@ RUN apt update \
     vim \
     git \
     curl \
+    && apt install -qq -y --no-install-recommends \
+    procps \
+    net-tools \
     && apt clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -54,19 +57,20 @@ RUN sed -i "s/listen = .*/listen = 9000/" /usr/local/etc/php-fpm.d/www.conf \
     && sed -i "s/pm.max_spare_servers = .*/pm.max_spare_servers = 96/" /usr/local/etc/php-fpm.d/www.conf \
     && sed -i "s/^;clear_env = no$/clear_env = no/" /usr/local/etc/php-fpm.d/www.conf
 
+RUN groupadd -g 5000 www \
+    && useradd -u 1000 -ms /bin/bash -g www www
+
 ### Composer Install
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
     && source ~/.bashrc
     # && composer install
-RUN cd /var/www/html \
-    && composer global require laravel/installer \
-    && composer create-project laravel/laravel example-app \
-    && chown -R www-data:www-data /var/www/html/example-app/storage /var/www/html/example-app/bootstrap/cache/ \
-    && chmod -R 775 /var/www/html/example-app/storage /var/www/html/example-app/bootstrap/cache/
-
-RUN groupadd -g 5000 www \
-    && useradd -u 1000 -ms /bin/bash -g www www
+# RUN cd /var/www/html \
+#     && composer global require laravel/installer \
+#     && composer create-project laravel/laravel example-app \
+#     && chown -R www-data:www-data /var/www/html/example-app/storage /var/www/html/example-app/bootstrap/cache/ \
+#     && chmod -R 775 /var/www/html/example-app/bootstrap/cache/ \
+#     && chmod -R 755 /var/www/html/example-app/storage
 
 ### Install NVM with NODE and NPM
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
