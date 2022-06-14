@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=qustkdcjf
+    ports:
+        - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+
+  php:
+    image: anti1346/php-fpm-laravel:8.1
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    volumes:
+      - ./nginx/html:/var/www/html
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/html:/var/www/html
