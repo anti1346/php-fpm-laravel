@@ -43,6 +43,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && pecl install imagick \
     && docker-php-ext-enable imagick
 
+### WebService Account
+RUN groupadd -g 5000 www \
+    && useradd -u 1000 -ms /bin/bash -g www-data www
+
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && sed -i "s/display_errors = Off/display_errors = On/" /usr/local/etc/php/php.ini \
     && sed -i "s/upload_max_filesize = .*/upload_max_filesize = 10M/" /usr/local/etc/php/php.ini \
@@ -57,20 +61,16 @@ RUN sed -i "s/listen = .*/listen = 9000/" /usr/local/etc/php-fpm.d/www.conf \
     && sed -i "s/pm.max_spare_servers = .*/pm.max_spare_servers = 96/" /usr/local/etc/php-fpm.d/www.conf \
     && sed -i "s/^;clear_env = no$/clear_env = no/" /usr/local/etc/php-fpm.d/www.conf
 
-RUN groupadd -g 5000 www \
-    && useradd -u 1000 -ms /bin/bash -g www www
-
 ### Composer Install
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
     && source ~/.bashrc
-    # && composer install
-RUN cd /var/www/html \
-    && composer global require laravel/installer \
-    && composer create-project laravel/laravel \
-    && chown -R www-data:www-data /var/www/html/laravel/storage /var/www/html/laravel/bootstrap/cache/ \
-    && chmod -R 775 /var/www/html/laravel/bootstrap/cache/ \
-    && chmod -R 755 /var/www/html/laravel/storage
+# RUN cd /var/www/html \
+#     && composer global require laravel/installer \
+#     && composer create-project laravel/laravel laravel \
+#     && chown -R www-data:www-data /var/www/html/laravel/storage /var/www/html/laravel/bootstrap/cache/ \
+#     && chmod -R 775 /var/www/html/laravel/bootstrap/cache/ \
+#     && chmod -R 755 /var/www/html/laravel/storage
 
 ### Install NVM with NODE and NPM
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
@@ -83,9 +83,6 @@ USER www
 EXPOSE 9000
 
 CMD ["php-fpm"]
-
-
-
 
 
 
