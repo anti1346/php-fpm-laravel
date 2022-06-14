@@ -44,8 +44,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-enable imagick
 
 ### WebService Account
-RUN groupadd -g 5000 www \
-    && useradd -u 1000 -ms /bin/bash -g www-data www
+RUN groupadd -g 33 www-data \
+    && useradd -u 33 -ms /usr/sbin/nologin -g www-data www-data
 
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && sed -i "s/display_errors = Off/display_errors = On/" /usr/local/etc/php/php.ini \
@@ -67,9 +67,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && source ~/.bashrc
 # RUN cd /var/www/html \
 #     && composer global require laravel/installer \
-#     && composer create-project laravel/laravel laravel \
-#     && chown -R www-data:www-data /var/www/html/laravel/storage /var/www/html/laravel/bootstrap/cache/ \
-#     && chmod -R 775 /var/www/html/laravel/bootstrap/cache/ \
+#     && composer create-project --prefer-dist laravel/laravel laravel \
+#     && composer install
+#     && chown -R www-data:www-data /var/www/html/laravel \
+#     && chmod -R 775 /var/www/html/laravel/bootstrap/cache \
 #     && chmod -R 755 /var/www/html/laravel/storage
 
 ### Install NVM with NODE and NPM
