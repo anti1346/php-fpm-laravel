@@ -65,12 +65,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
     && source ~/.bashrc
     # && composer install
-# RUN cd /var/www/html \
-#     && composer global require laravel/installer \
-#     && composer create-project laravel/laravel example-app \
-#     && chown -R www-data:www-data /var/www/html/example-app/storage /var/www/html/example-app/bootstrap/cache/ \
-#     && chmod -R 775 /var/www/html/example-app/bootstrap/cache/ \
-#     && chmod -R 755 /var/www/html/example-app/storage
+RUN cd /var/www/html \
+    && composer global require laravel/installer \
+    && composer create-project laravel/laravel \
+    && chown -R www-data:www-data /var/www/html/laravel/storage /var/www/html/laravel/bootstrap/cache/ \
+    && chmod -R 775 /var/www/html/laravel/bootstrap/cache/ \
+    && chmod -R 755 /var/www/html/laravel/storage
 
 ### Install NVM with NODE and NPM
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
@@ -83,6 +83,11 @@ USER www
 EXPOSE 9000
 
 CMD ["php-fpm"]
+
+
+
+
+
 
 
 
