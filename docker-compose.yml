@@ -43,10 +43,11 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     container_name: mariadb
+    env_file: ./mariadb/.env
     environment:
       - MYSQL_ROOT_PASSWORD=qustkdcjf
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - ./mariadb/data:/var/lib/mysql
     ports:
       - 3306:3306
     networks:
