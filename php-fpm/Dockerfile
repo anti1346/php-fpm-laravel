@@ -7,27 +7,27 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN apt update \
     && apt install -qq -y --no-install-recommends \
-    zlib1g-dev \
-    libzip-dev \
-    libz-dev \
-    libpq-dev \
-    libjpeg-dev \
-    libpng-dev \
-    libfreetype6-dev \
-    libssl-dev \
-    libxml2-dev \
-    libreadline-dev \
-    libgmp-dev \
-    libmagickwand-dev \
-    unzip \
+        zlib1g-dev \
+        libzip-dev \
+        libz-dev \
+        libpq-dev \
+        libjpeg-dev \
+        libpng-dev \
+        libfreetype6-dev \
+        libssl-dev \
+        libxml2-dev \
+        libreadline-dev \
+        libgmp-dev \
+        libmagickwand-dev \
+        unzip \
     && apt install -qq -y --no-install-recommends \
-    telnet \
-    vim \
-    git \
-    curl \
+        telnet \
+        vim \
+        git \
+        curl \
     && apt install -qq -y --no-install-recommends \
-    procps \
-    net-tools \
+        procps \
+        net-tools \
     && apt clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
