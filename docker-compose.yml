@@ -13,27 +13,32 @@ services:
 
 
   php:
-    image: anti1346/php-fpm-laravel:8.1
-    build:
-      context: .
+    image: php:8-fpm
+    # image: anti1346/php-fpm-laravel:8.1
+    # build:
+    #   context: ./php-fpm/
+    #   dockerfile: Dockerfile
     restart: unless-stopped
     container_name: php
     depends_on:
       - mariadb
     volumes:
-      - ./webroot/html:/var/www/html
+      - ./webroot:/usr/share/nginx/html
     ports:
       - 9000:9000
 
 
   nginx:
-    image: nginx:latest
+    image: anti1346/nginx:1.21.6
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile
     restart: unless-stopped
     container_name: nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./webroot/html:/var/www/html
+      - ./webroot:/usr/share/nginx/html
     depends_on:
       - php
     ports:
