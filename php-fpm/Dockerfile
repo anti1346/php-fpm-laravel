@@ -65,19 +65,17 @@ RUN sed -i "s/listen = .*/listen = 9000/" /usr/local/etc/php-fpm.d/www.conf \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
     && source ~/.bashrc
-# RUN cd /var/www/html \
-#     && composer global require laravel/installer \
-#     && composer create-project --prefer-dist laravel/laravel laravel \
-#     && composer install
-#     && chown -R www-data:www-data /var/www/html/laravel \
-#     && chmod -R 775 /var/www/html/laravel/bootstrap/cache \
-#     && chmod -R 755 /var/www/html/laravel/storage
 
 ### Install NVM with NODE and NPM
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
     && source ~/.bashrc \
     && nvm install node
     # && nvm install $NODE_VERSION
+
+### initscript.sh
+COPY ./initscript.sh /initscript.sh
+RUN chmod +x /initscript.sh \
+    && bash /initscript.sh
 
 USER www
 
