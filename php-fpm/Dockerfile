@@ -43,24 +43,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && pecl install imagick \
     && docker-php-ext-enable imagick
 
-### WebService Account
-RUN groupadd -g 33 www-data \
-    && useradd -u 33 -ms /usr/sbin/nologin -g www-data www-data
-
-RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
-    && sed -i "s/display_errors = Off/display_errors = On/" /usr/local/etc/php/php.ini \
-    && sed -i "s/upload_max_filesize = .*/upload_max_filesize = 10M/" /usr/local/etc/php/php.ini \
-    && sed -i "s/post_max_size = .*/post_max_size = 12M/" /usr/local/etc/php/php.ini \
-    && sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /usr/local/etc/php/php.ini \
-    && sed -i "s/variables_order = .*/variables_order = 'EGPCS'/" /usr/local/etc/php/php.ini
-RUN sed -i "s/;error_log =.*/error_log = \/proc\/self\/fd\/2/" /usr/local/etc/php-fpm.conf
-RUN sed -i "s/listen = .*/listen = 9000/" /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i "s/pm.max_children = .*/pm.max_children = 200/" /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i "s/pm.start_servers = .*/pm.start_servers = 56/" /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i "s/pm.min_spare_servers = .*/pm.min_spare_servers = 32/" /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i "s/pm.max_spare_servers = .*/pm.max_spare_servers = 96/" /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i "s/^;clear_env = no$/clear_env = no/" /usr/local/etc/php-fpm.d/www.conf
-
 ### Composer Install
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     && echo "export PATH=${PATH}:~/.composer/vendor/bin" >> ~/.bashrc \
